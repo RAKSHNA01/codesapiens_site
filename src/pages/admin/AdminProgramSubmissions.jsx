@@ -56,7 +56,7 @@ const AdminProgramSubmissions = () => {
         const csvRows = [];
 
         // Headers
-        const headers = ['Name', 'Email', 'Mobile', 'Submitted At', ...program.questions.map(q => q.title)];
+        const headers = ['Name', 'Email', 'Mobile', 'GitHub', 'LinkedIn', 'Submitted At', ...program.questions.map(q => q.title)];
         csvRows.push(headers.join(','));
 
         // Rows
@@ -65,6 +65,8 @@ const AdminProgramSubmissions = () => {
                 `"${reg.user_name}"`,
                 `"${reg.user_email}"`,
                 `"${reg.user_mobile || '-'}"`,
+                `"${reg.answers?.github_profile || '-'}"`,
+                `"${reg.answers?.linkedin_profile || '-'}"`,
                 `"${new Date(reg.submitted_at).toLocaleString()}"`,
                 ...program.questions.map(q => {
                     const ans = reg.answers[q.id];
@@ -179,10 +181,10 @@ const AdminProgramSubmissions = () => {
 
                         <div className="p-6 space-y-6">
                             {/* User Info Block */}
-                            <div className="bg-black/30 p-4 rounded border border-white/5 grid grid-cols-2 gap-4">
+                            <div className="bg-black/30 p-4 rounded border border-white/5 grid grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div>
                                     <label className="text-xs text-gray-500 uppercase">Email</label>
-                                    <div className="text-white font-mono text-sm">{selectedRegistration.user_email}</div>
+                                    <div className="text-white font-mono text-sm break-all">{selectedRegistration.user_email}</div>
                                 </div>
                                 <div>
                                     <label className="text-xs text-gray-500 uppercase">Mobile</label>
@@ -190,8 +192,34 @@ const AdminProgramSubmissions = () => {
                                 </div>
                                 <div>
                                     <label className="text-xs text-gray-500 uppercase">Submitted At</label>
-                                    <div className="text-white font-mono text-sm">{new Date(selectedRegistration.submitted_at).toLocaleString()}</div>
+                                    <div className="text-white font-mono text-sm">{new Date(selectedRegistration.submitted_at).toLocaleDateString()}</div>
                                 </div>
+                                {selectedRegistration.answers?.github_profile && (
+                                    <div className="col-span-full border-t border-white/10 pt-2 mt-2">
+                                        <label className="text-xs text-gray-500 uppercase">GitHub</label>
+                                        <a
+                                            href={selectedRegistration.answers.github_profile}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block text-[#0061FE] hover:underline text-sm truncate"
+                                        >
+                                            {selectedRegistration.answers.github_profile}
+                                        </a>
+                                    </div>
+                                )}
+                                {selectedRegistration.answers?.linkedin_profile && (
+                                    <div className="col-span-full">
+                                        <label className="text-xs text-gray-500 uppercase">LinkedIn</label>
+                                        <a
+                                            href={selectedRegistration.answers.linkedin_profile}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block text-[#0061FE] hover:underline text-sm truncate"
+                                        >
+                                            {selectedRegistration.answers.linkedin_profile}
+                                        </a>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Q&A */}
